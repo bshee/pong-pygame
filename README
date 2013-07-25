@@ -6,4 +6,5 @@ Changes:
 * AI class to move Bat
 * allow option to play against another person
 * use Sprite class
-* change Ball so that it moves simply with velocity 
+* change Ball so that it moves with x and y offset
+* move game logic into its own class

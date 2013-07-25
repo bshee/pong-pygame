@@ -77,9 +77,6 @@ class PlayerBat(Bat):
     """Movable bat that allows one to hit the ball
     Functions: key_down, key_up, update 
     Attributes: rect, boundary, x_velocity"""
-    
-    def __init__(self, x, y):
-        Bat.__init__(self, x, y)
         
     def key_down(self, key):
         if key == K_LEFT:
@@ -101,10 +98,7 @@ class PlayerBat(Bat):
 class AIBat(Bat):
     """AI bat that attempts to follow the ball
     Functions: update"""
-    
-    def __init__(self, x, y):
-        Bat.__init__(self, x, y)
-    
+   
     def update(self, ball):
         if ball.y <= SCREEN_HEIGHT / 4 * 3:
             if self.rect.x + BAT_WIDTH / 2 < ball.x:
@@ -262,7 +256,7 @@ def main():
                 player_score += 1
             ball.setup()
             player_bat.reset()
-            ai_bat.reset()            
+            ai_bat.reset()
          
         pygame.display.update()                
         clock.tick(FRAMES_PER_SECOND)     
