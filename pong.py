@@ -3,7 +3,7 @@
 # Pong
 
 
-VERSION = "0.1"
+VERSION = "0.2"
 GAME_TITLE = "Pong v{0}".format(VERSION)
 
 try:
