@@ -4,5 +4,6 @@ Changes:
 * One Bat class
 * Keyboard Controller
 * AI class to move Bat
-* play against AI or person
+* allow option to play against another person
 * use Sprite class
+* change Ball so that it moves simply with velocity 
