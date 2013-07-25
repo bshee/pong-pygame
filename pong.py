@@ -54,7 +54,7 @@ class Bat(pygame.sprite.Sprite):
         self.rect.x = x - BAT_WIDTH / 2
         self.rect.y = y - BAT_HEIGHT / 2
         
-        self._start_rect = self.rect
+        self._start_rect = self.rect.copy()
         
         screen = pygame.display.get_surface()
         self.boundary = screen.get_rect()
