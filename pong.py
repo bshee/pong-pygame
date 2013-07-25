@@ -38,6 +38,9 @@ COURT_NORMAL = 0
 COURT_OUTSIDE_TOP = 1
 COURT_OUTSIDE_BOTTOM = 2
 
+SCORE_FONT_NAME = None
+SCORE_FONT_SIZE = 24
+
 class Bat(pygame.sprite.Sprite):
     """Bat that can draw itself and know how to move
     Functions: move, draw, reset
@@ -198,67 +201,74 @@ def draw_score(screen, font, score, x, y):
     score_pos = score_text.get_rect()
     score_pos.centerx = screen.get_rect().centerx
     screen.blit(score_text, (x, y))
-    
 
-def main():
-    pygame.init()
-    
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption(GAME_TITLE)
-    
-    clock = pygame.time.Clock()
-    
-    background = pygame.Surface(screen.get_size()).convert()
-    background.fill(SCREEN_COLOR)
-    
-    score_font = pygame.font.Font(None, 24)      
-    player_score = 0
-    ai_score = 0    
-    
-    ball = Ball(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, screen.get_rect())
-    player_bat = PlayerBat(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 30)
-    ai_bat = AIBat(SCREEN_WIDTH // 2, 30)
-       
-    while True:        
-        draw_score(background, score_font, player_score, 10, SCREEN_HEIGHT - 24)  
-        draw_score(background, score_font, ai_score, 10, 12)
+class Game:
+    """Handles the game logic"""
+    def __init__(self):
+        pygame.init()
         
-        screen.blit(background, (0, 0))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pygame.display.set_caption(GAME_TITLE)
         
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                return
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    return 
-                elif event.key == K_d:
-                    print(ball.vector)
-                else:
-                    player_bat.key_down(event.key)
-            elif event.type == KEYUP:
-                player_bat.key_up(event.key)
-       
-        player_bat.update()
-        player_bat.draw(screen)
+        self.clock = pygame.time.Clock()
+        self.background = pygame.Surface(self.screen.get_size()).convert()
+        self.background.fill(SCREEN_COLOR)
         
-        ai_bat.update(ball)
-        ai_bat.draw(screen)
+        self.ball = Ball(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, self.screen.get_rect())
+        self.player_bat = PlayerBat(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 30)
+        self.ai_bat = AIBat(SCREEN_WIDTH // 2, 30)
         
-        ball.move((player_bat, ai_bat))
-        ball.draw(screen)
+        self.score_font = pygame.font.Font(SCORE_FONT_NAME, SCORE_FONT_SIZE)
+        self.player_score = 0
+        self.ai_score = 0
         
-        if ball.offcourt:
-            if ball.offcourt == COURT_OUTSIDE_BOTTOM:
-                ai_score += 1
-            elif ball.offcourt == COURT_OUTSIDE_TOP:
-                player_score += 1
-            ball.setup()
-            player_bat.reset()
-            ai_bat.reset()
-         
-        pygame.display.update()                
-        clock.tick(FRAMES_PER_SECOND)     
+    def draw_score(self, score, x, y):
+        score_text = self.score_font.render('Score: {0}'.format(score), False, SCORE_FONT_COLOR, SCREEN_COLOR)
+        score_pos = score_text.get_rect()
+        score_pos.centerx = self.screen.get_rect().centerx
+        self.background.blit(score_text, (x, y))
         
+    def main(self):
+        while True:
+            self.draw_score(self.player_score, 10, SCREEN_HEIGHT - 24)  
+            self.draw_score(self.ai_score, 10, 12)
+        
+            self.screen.blit(self.background, (0, 0))
+        
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    return
+                elif event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        return 
+                    elif event.key == K_d:
+                        print(self.ball.vector)
+                    else:
+                        self.player_bat.key_down(event.key)
+                elif event.type == KEYUP:
+                    self.player_bat.key_up(event.key)
+           
+            self.player_bat.update()
+            self.player_bat.draw(self.screen)
+            
+            self.ai_bat.update(self.ball)
+            self.ai_bat.draw(self.screen)
+            
+            self.ball.move((self.player_bat, self.ai_bat))
+            self.ball.draw(self.screen)
+            
+            if self.ball.offcourt:
+                if self.ball.offcourt == COURT_OUTSIDE_BOTTOM:
+                    self.ai_score += 1
+                elif self.ball.offcourt == COURT_OUTSIDE_TOP:
+                    self.player_score += 1
+                self.ball.setup()
+                self.player_bat.reset()
+                self.ai_bat.reset()
+             
+            pygame.display.update()                
+            self.clock.tick(FRAMES_PER_SECOND)   
     
 if __name__ == "__main__":
-    main()
+    game = Game()
+    game.main()
