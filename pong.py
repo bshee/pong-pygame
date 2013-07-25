@@ -34,6 +34,10 @@ SCORE_FONT_COLOR = (250, 250, 250)
 
 FRAMES_PER_SECOND = 60
 
+COURT_NORMAL = 0
+COURT_OUTSIDE_TOP = 1
+COURT_OUTSIDE_BOTTOM = 2
+
 class Bat(pygame.sprite.Sprite):
     """Bat that can draw itself and know how to move
     Functions: move, draw, reset
@@ -121,13 +125,11 @@ class Ball:
     def __init__(self, x, y):
         self._start_x = x
         self._start_y = y
-        self.x = x
-        self.y = y
+        
         screen = pygame.display.get_surface()
         self.boundary = screen.get_rect()
-        self.hit = False # prevents collision detecting more than once in a single frame
-        self.offcourt = 0
-        self.set_direction()
+        
+        self.setup()
         
     def set_direction(self):
         angle = math.pi / 4 * (random.randint(1, 4) * 2 - 1)
@@ -148,15 +150,14 @@ class Ball:
             
             # hit the top
             if (top_left and top_right):
-                self.offcourt = 2
-                #angle *= -1
+                self.offcourt = COURT_OUTSIDE_TOP
             # hit the bottom
             elif (bot_left and bot_right):
-                self.offcourt = 1
-                #angle *= -1
+                self.offcourt = COURT_OUTSIDE_BOTTOM
             # hit the side walls
             if (bot_left and top_left) or (bot_right and top_right):
                 angle = math.pi - angle
+                
         # collision checking with bat
         else: 
             set = False # flag when the ball bounces against something
@@ -183,12 +184,12 @@ class Ball:
     def draw(self, surface):
         pygame.draw.circle(surface, BALL_COLOR, (self.x, self.y), BALL_RADIUS)
         
-    def reset(self):
+    def setup(self):
         """Places the ball in original starting position and reset hit and offcourt"""
         self.x = self._start_x
         self.y = self._start_y
         self.hit = False
-        self.offcourt = 0
+        self.offcourt = COURT_NORMAL
         
         self.set_direction()
     
@@ -255,11 +256,11 @@ def main():
         ball.draw(screen)
         
         if ball.offcourt:
-            if ball.offcourt == 1:
+            if ball.offcourt == COURT_OUTSIDE_BOTTOM:
                 ai_score += 1
-            elif ball.offcourt == 2:
+            elif ball.offcourt == COURT_OUTSIDE_TOP:
                 player_score += 1
-            ball.reset()
+            ball.setup()
             player_bat.reset()
             ai_bat.reset()            
          
