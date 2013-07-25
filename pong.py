@@ -72,6 +72,10 @@ class Bat(pygame.sprite.Sprite):
     def reset(self):
         """Sets the bat back to its original starting position"""
         self.rect = self._start_rect
+        
+    def update(self):
+        if self.x_velocity != 0:
+            self.move()
 
 class PlayerBat(Bat):
     """Movable bat that allows one to hit the ball
@@ -89,10 +93,6 @@ class PlayerBat(Bat):
             self.x_velocity += BAT_SPEED
         elif key == K_RIGHT:
             self.x_velocity -= BAT_SPEED
-        
-    def update(self):
-        if self.x_velocity != 0:
-            self.move()
             
 
 class AIBat(Bat):
@@ -108,20 +108,18 @@ class AIBat(Bat):
         elif self.x_velocity != 0:
             self.x_velocity = 0
             
-        if self.x_velocity != 0:
-            self.move()
+        Bat.update(self)
        
 class Ball:
     """A ball that bounces against the walls
     Returns: ball object
     Functions: move, draw, reset
     Attributes: x, y, vector, boundary, hit, offcourt"""
-    def __init__(self, x, y):
+    
+    def __init__(self, x, y, boundary):
         self._start_x = x
-        self._start_y = y
-        
-        screen = pygame.display.get_surface()
-        self.boundary = screen.get_rect()
+        self._start_y = y        
+        self.boundary = boundary
         
         self.setup()
         
@@ -217,7 +215,7 @@ def main():
     player_score = 0
     ai_score = 0    
     
-    ball = Ball(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    ball = Ball(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, screen.get_rect())
     player_bat = PlayerBat(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 30)
     ai_bat = AIBat(SCREEN_WIDTH // 2, 30)
        
