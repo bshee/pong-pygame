@@ -30,6 +30,8 @@ BAT_HEIGHT = 8
 BAT_COLOR = (250, 250, 250)
 BAT_SPEED = 4
 
+SCORE_FONT_COLOR = (250, 250, 250)
+
 class Bat(pygame.sprite.Sprite):
     """Bat that can draw itself and know how to move
     Functions: move, draw, reset
@@ -44,7 +46,7 @@ class Bat(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.rect.x = x - BAT_WIDTH / 2
-        self.rect.y = y - BAT_WIDTH / 2
+        self.rect.y = y - BAT_HEIGHT / 2
         
         self._start_rect = self.rect
         
@@ -196,6 +198,13 @@ class Ball:
         self.y = int(self.y)
 
 
+def draw_score(screen, font, score, x, y):
+    score_text = font.render('Score: {0}'.format(score), False, SCORE_FONT_COLOR, SCREEN_COLOR)
+    score_pos = score_text.get_rect()
+    score_pos.centerx = screen.get_rect().centerx
+    screen.blit(score_text, (x, y))
+    
+
 def main():
     pygame.init()
     
@@ -216,15 +225,8 @@ def main():
     aiBat = AIBat(SCREEN_WIDTH // 2, 30)
        
     while True:        
-        scoreText = scoreFont.render('Score: {0}'.format(playerScore), False, (250, 250, 250), SCREEN_COLOR)
-        scoreTextPos = scoreText.get_rect()  
-        scoreTextPos.centerx = background.get_rect().centerx
-        background.blit(scoreText, (10, SCREEN_HEIGHT - 24))
-        
-        scoreText = scoreFont.render('Score: {0}'.format(aiScore), False, (250, 250, 250), SCREEN_COLOR)
-        scoreTextPos = scoreText.get_rect()  
-        scoreTextPos.centerx = background.get_rect().centerx
-        background.blit(scoreText, (10, 12))
+        draw_score(background, scoreFont, playerScore, 10, SCREEN_HEIGHT - 24)  
+        draw_score(background, scoreFont, aiScore, 10, 12)
         
         screen.blit(background, (0, 0))
         
