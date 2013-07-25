@@ -22,22 +22,32 @@ SCREEN_HEIGHT = 400
 SCREEN_COLOR = (5, 5, 5)
 
 BALL_RADIUS = 8 
-BALL_SPEED = 8
 BALL_COLOR = (250, 250, 250)
+BALL_SPEED = 8
 
 BAT_WIDTH = 40 
 BAT_HEIGHT = 8
-BAT_SPEED = 4
 BAT_COLOR = (250, 250, 250)
+BAT_SPEED = 4
 
-class Bat:
+class Bat(pygame.sprite.Sprite):
     """Bat that can draw itself and know how to move
     Functions: move, draw, reset
     Attributes: rect, boundary, x_velocity
     """
     def __init__(self, x, y):
-        self.rect = Rect(x - BAT_WIDTH / 2, y - BAT_HEIGHT / 2, BAT_WIDTH, BAT_HEIGHT)
+        pygame.sprite.Sprite.__init__(self)
+        
+        self.image = pygame.Surface((BAT_WIDTH, BAT_HEIGHT))
+        self.image.fill(BAT_COLOR)
+        
+        self.rect = self.image.get_rect()
+
+        self.rect.x = x - BAT_WIDTH / 2
+        self.rect.y = y - BAT_WIDTH / 2
+        
         self._start_rect = self.rect
+        
         screen = pygame.display.get_surface()
         self.boundary = screen.get_rect()
         self.x_velocity = 0
