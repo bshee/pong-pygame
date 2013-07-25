@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 #
 # Pong
-# * change so that only one bat exists and another for keyboard controller and AI thinkingW
-# * extend to play against another person (A and D) or a computer
+
 
 VERSION = "0.1"
+GAME_TITLE = "Pong v{0}".format(VERSION)
 
 try:
     import sys
@@ -190,7 +190,7 @@ def main():
     pygame.init()
     
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption('Pong v' + VERSION)
+    pygame.display.set_caption(GAME_TITLE)
     
     clock = pygame.time.Clock()
     

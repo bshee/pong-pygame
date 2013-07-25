@@ -1,1 +1,8 @@
 This project creates Pong in pygame using Python3
+
+Changes:
+* One Bat class
+* Keyboard Controller
+* AI class to move Bat
+* play against AI or person
+* use Sprite class
