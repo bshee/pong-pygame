@@ -32,6 +32,8 @@ BAT_SPEED = 4
 
 SCORE_FONT_COLOR = (250, 250, 250)
 
+FRAMES_PER_SECOND = 60
+
 class Bat(pygame.sprite.Sprite):
     """Bat that can draw itself and know how to move
     Functions: move, draw, reset
@@ -216,17 +218,17 @@ def main():
     background = pygame.Surface(screen.get_size()).convert()
     background.fill(SCREEN_COLOR)
     
-    playerScore = 0
-    aiScore = 0
-    scoreFont = pygame.font.Font(None, 24)      
+    score_font = pygame.font.Font(None, 24)      
+    player_score = 0
+    ai_score = 0    
     
     ball = Ball(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-    playerBat = PlayerBat(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 30)
-    aiBat = AIBat(SCREEN_WIDTH // 2, 30)
+    player_bat = PlayerBat(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 30)
+    ai_bat = AIBat(SCREEN_WIDTH // 2, 30)
        
     while True:        
-        draw_score(background, scoreFont, playerScore, 10, SCREEN_HEIGHT - 24)  
-        draw_score(background, scoreFont, aiScore, 10, 12)
+        draw_score(background, score_font, player_score, 10, SCREEN_HEIGHT - 24)  
+        draw_score(background, score_font, ai_score, 10, 12)
         
         screen.blit(background, (0, 0))
         
@@ -239,30 +241,30 @@ def main():
                 elif event.key == K_d:
                     print(ball.vector)
                 else:
-                    playerBat.key_down(event.key)
+                    player_bat.key_down(event.key)
             elif event.type == KEYUP:
-                playerBat.key_up(event.key)
+                player_bat.key_up(event.key)
        
-        playerBat.update()
-        playerBat.draw(screen)
+        player_bat.update()
+        player_bat.draw(screen)
         
-        aiBat.update(ball)
-        aiBat.draw(screen)
+        ai_bat.update(ball)
+        ai_bat.draw(screen)
         
-        ball.move((playerBat, aiBat))
+        ball.move((player_bat, ai_bat))
         ball.draw(screen)
         
         if ball.offcourt:
             if ball.offcourt == 1:
-                aiScore += 1
+                ai_score += 1
             elif ball.offcourt == 2:
-                playerScore += 1
+                player_score += 1
             ball.reset()
-            playerBat.reset()
-            aiBat.reset()            
+            player_bat.reset()
+            ai_bat.reset()            
          
         pygame.display.update()                
-        clock.tick(60)     
+        clock.tick(FRAMES_PER_SECOND)     
         
     
 if __name__ == "__main__":
