@@ -41,6 +41,11 @@ COURT_OUTSIDE_BOTTOM = 2
 SCORE_FONT_NAME = None
 SCORE_FONT_SIZE = 24
 
+KEY_SPEED_MAP = {
+    K_LEFT: -BAT_SPEED,
+    K_RIGHT: BAT_SPEED
+}
+
 class Bat(pygame.sprite.Sprite):
     """Bat that can draw itself and know how to move
     Functions: move, draw, reset
@@ -86,16 +91,12 @@ class PlayerBat(Bat):
     Attributes: rect, boundary, x_velocity"""
         
     def key_down(self, key):
-        if key == K_LEFT:
-            self.x_velocity -= BAT_SPEED
-        elif key == K_RIGHT:
-            self.x_velocity += BAT_SPEED
+        if key in KEY_SPEED_MAP:
+            self.x_velocity += KEY_SPEED_MAP[key]
     
     def key_up(self, key):
-        if key == K_LEFT:
-            self.x_velocity += BAT_SPEED
-        elif key == K_RIGHT:
-            self.x_velocity -= BAT_SPEED
+        if key in KEY_SPEED_MAP:
+            self.x_velocity -= KEY_SPEED_MAP[key]
             
 
 class AIBat(Bat):
